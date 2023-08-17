@@ -2,10 +2,28 @@
 
 class Player():
     level = 0 
+    active_room = 0
+    
+    def __init__(self):
+        self.backpack = []
     
     @classmethod
     def add_level(cls):
         cls.level += 1
+     
+    @classmethod   
+    def go_room_first(cls):
+        cls.active_room -= 1
+    
+    @classmethod
+    def go_room_second(cls):
+        cls.active_room += 1
+        
+    def show_backpack():
+        pass
+    
+    def add_backpack(self, item):
+        self.backpack.append(item)
 
 #klasa z pomieszczeniami ogólna
 
@@ -27,17 +45,14 @@ class Board(Furniture):
         super().__init__(name)
         self.year = year
         self.telephone_number = telephon_number
+        Telephone.telephone_solution(telephon_number)
+        
         
     def opis(self):
         print(f"\nPodchodząc pod ściane zauważasz tablicę.\n"
               + f"Znajdują się na niej liczby. Przypatrując się bardziej\n"
               + f"widzisz ciąg liczb {self.year}|{self.telephone_number}")
-        
-    def use():
-        pass
-    
-    def get():
-        pass
+
     
 class Table(Furniture):
     def __init__(self, name, solution):
@@ -61,20 +76,34 @@ class Machine(Furniture):
         super().__init__(name)
         
     def opis(self):
-        print(f"Maszyna jest największym elementem pomieszczenia. Jej konstrukcja przypomina\n"
+        print(f"\nMaszyna jest największym elementem pomieszczenia. Jej konstrukcja przypomina\n"
             + "kombinację zegara, urządzenia muzycznego i maszyny do gry. Skomplikowane rury i\n"
             + "przewody prowadzą do różnych sekcji, a każdy element jest zdobiony symbolami\n"
             + "związanymi z podróżami w czasie.\n")
      
-    def use(self):
+    def get(self):
         print("Przechodzisz zza maszynę, widzisz na niej instrukcję obsługi:\n"
               + "Musisz odnależć medaliony, by dostosować maszynę w odpowiedni sposób i\n"
               + "aktywować magiczne pole energii, które umożliwi Ci podróż w czasie!\n"
               + "Aby to osiągnąć, musisz zidentyfikować właściwe wzorce i sekwencje, które reprezentują różne okresy czasu.\n")
          
+class Telephone(Furniture):
+    password = ""
+    def __init__(self, name):
+        super().__init__(name)
         
+    def opis(self):
+        print(f"\nCentralnym punktem pokoju jest olbrzymi mechanizm\n"
+              + "składający się z obracających się kół, przycisków i trybików. Być może trzeba ustawić\n"
+              + "odpowiednią kombinację, korzystając z wskazówek pozostawionych w poprzednim\n"
+              + "pomieszczeniu oraz znajdujących się na ścianach?\n")
+        
+    def telephone_solution(solution):
+        Telephone.password =  solution
    
-
+    def use():
+        pass
+        
 #klasa z przedmiotami
 class item():
     pass
@@ -90,19 +119,22 @@ def help_command():
           + r"\get - zabierz przedmiotu" 
           + r"\ekwipunek - wyświetli listę przedmiotów dostępnych w twoim ekwipunku" 
           + r"\pomoc - wyświetli listę dostępnych instrukcji " 
-          + r"\opisz - opisuje aktualne pomieszczenie" 
+          + r"\opisz - opisuje aktualne miejsce" 
     )
-
+    
+def furniture_activites(furniture):
+    furniture.opis()
+    choosing_menu()
+    
 def play_first_room():
     while True:
         print(r"Wybierz gdzie chcesz podejśc: \tablica, \stol, \maszyna, \wlaz")
         choose =  input()
         if choose == r"\tablica":
-            board = Board("Tablica", 1453, 515675200)
             board.opis()
+            #furniture_activites(tablica)
             choosing_menu()
         elif choose == r"\stol":
-            table = Table("Stół z zagadką", "Kolumb")
             table.opis()
             option = choosing_menu()
             if option == r"\use":
@@ -116,16 +148,20 @@ def play_first_room():
                     print("Błedna odpowiedz")
                 pass
         elif choose == r"\maszyna":
-            maszyna = Machine("Maszyna")
-            maszyna.opis()
+            machine.opis()
             option = choosing_menu()
             if option == r"\get":
-                maszyna.use()
+                machine.get()
+                choosing_menu() #to jest żle
         elif choose == r"\wlaz":
             if Player.level == 0:
                 print("Właz jest zamknięty")
                 continue
             elif Player.level == 1:
+                print("\nPrzechodząc przez otwarty właz, znajdujesz się w kolejnym pomieszczeniu. Tym\n"
+                      + "razem jest ono wypełnione skomplikowanymi mechanizmami, starożytnymi artefaktami i\n"
+                      + "tajemniczymi urządzeniami. Pokój emanuje poczuciem tajemnicy i magii podróży w czasie.\n"
+                      + "")
                 play_second_room()
         else:
             print("Źle")
@@ -133,13 +169,14 @@ def play_first_room():
         
 def play_second_room():
     while True:
-        print(r"Wybierz gdzie chcesz podejśc: \telefon, \maszyna_czasu, \kufer, \ksiega, \waga, \szkatulka, \wlaz")
+        print(r"Wybierz gdzie chcesz podejśc: \telefon,  \kufer, \maszyna_czasu, \ksiega, \waga, \szkatulka, \wlaz")
         choose = input()
         if choose == r"\telefon":
+            telephone.opis()
+            
+        elif choose == r"\kufer":
             pass
         elif choose == r"\maszyna_czasu":
-            pass
-        elif choose == r"\kufer":
             pass
         elif choose == r"\ksiega":
             pass
@@ -148,7 +185,9 @@ def play_second_room():
         elif choose == r"\szkatulka":
             pass
         elif choose == r"\wlaz":
-           play_first_room()
+            Player.go_room_first()
+            print("Przechodzisz do Tajemniczego pokoju\n")
+            play_first_room()
         else:
             print("Źle")
             continue
@@ -162,16 +201,21 @@ def choosing_menu():
         choose_menu = input()
         if choose_menu == r"\use":
             return r"\use"
-        if choose_menu == r"\get":
-            return True
+        elif choose_menu == r"\get":
+            return r"\get"
         elif choose_menu == r"\ekwipunek":
-            pass
+            pass #pokazuje ekwpipunek
+        elif choose_menu == r"\opis":
+            return r"\opis"
         elif choose_menu == r"\pomoc":
             help_command()
             continue
         elif choose_menu == r"\wyjdz":
             print("\nWracasz na środek pokoju")
-            play_first_room()  
+            if Player.active_room == 0:
+                play_first_room()
+            elif Player.active_room == 1:
+                play_second_room()
         else:
             print("Źle!")
             continue
@@ -184,10 +228,16 @@ print("W grze wcielasz się w rolę utalentowanego archeologa, który przypadkow
 
 
 print("Tajemniczy pokój\n"
-      + "Przy wejściu do pomieszczenia archeolog znajduje się w pokoju o stonowanej kolorystyce.\n"
+      + "Przy wejściu do pomieszczenia znajdujesz się w pokoju o stonowanej kolorystyce.\n"
       + "Ściany zdobią starodawne mapy i tablice związane z podróżami w czasie. Na środku stoi stół\n"
       + "z metalowym blatem, na którym leży zakurzony stary pergamin.\n"
       + "W rogu stoju tajemnicza maszyna. Obok niej znajduję się stary, trudny do zauważenia właz\n")
 
+
+telephone = Telephone("Mechanizm Kombinacji Czasowych")
+table = Table("Stół z zagadką", "Kolumb")
+board = Board("Tablica", 1453, 515675200)
+machine = Machine("Maszyna")
+
 player = Player()
-play_first_room()
+play_second_room()
