@@ -1,8 +1,6 @@
-#klasa z pokojami
-
 class Player():
     level = 0 
-    active_room = 0
+    active_room = 1
     
     def __init__(self):
         self.backpack = []
@@ -18,12 +16,21 @@ class Player():
     @classmethod
     def go_room_second(cls):
         cls.active_room += 1
-        
-    def show_backpack():
-        pass
+         
+    def show_backpack(self):
+        print(f"Twoje przedmioty w ekwipunku:")
+        for item in self.backpack:
+            print(item.name)
     
     def add_backpack(self, item):
         self.backpack.append(item)
+        
+    def check_item(self, item):
+        if item in self.backpack:
+            return True
+        else:
+            return False
+    
 
 #klasa z pomieszczeniami ogólna
 
@@ -35,6 +42,8 @@ class Furniture():
         
     def opis(self):
         print(self.description + f"{self.name}")
+        
+
         
    
         
@@ -89,6 +98,7 @@ class Machine(Furniture):
          
 class Telephone(Furniture):
     password = ""
+    key = 0
     def __init__(self, name):
         super().__init__(name)
         
@@ -99,14 +109,33 @@ class Telephone(Furniture):
               + "pomieszczeniu oraz znajdujących się na ścianach?\n")
         
     def telephone_solution(solution):
-        Telephone.password =  solution
+        Telephone.password = solution
+        
+        
+    @classmethod   
+    def active_key(cls):
+        cls.key += 1
+        
+class Kufer(Furniture):
+    def __init__(self, name):
+        super().__init__(name)
+        
+    def opis(self):
+        print(f"Na stole stoi starożytne zamknięte na klucz pudło, które jest znane jako 'Kufer Czasu'\n")
+        
+        
+        
+        
+        
    
-    def use():
-        pass
         
 #klasa z przedmiotami
 class item():
-    pass
+    def __init__(self, name, desc):
+        self.name = name
+        self.desc = desc
+        
+    
 
 
 
@@ -132,7 +161,6 @@ def play_first_room():
         choose =  input()
         if choose == r"\tablica":
             board.opis()
-            #furniture_activites(tablica)
             choosing_menu()
         elif choose == r"\stol":
             table.opis()
@@ -146,7 +174,7 @@ def play_first_room():
                     choosing_menu()
                 else:
                     print("Błedna odpowiedz")
-                pass
+                    pass
         elif choose == r"\maszyna":
             machine.opis()
             option = choosing_menu()
@@ -173,9 +201,39 @@ def play_second_room():
         choose = input()
         if choose == r"\telefon":
             telephone.opis()
-            
+            while True:
+                option = choosing_menu()
+                if option == r"\use":
+                    print("Wykręć numer telefonu na kole: \n")
+                    solution = input()
+                    if solution == str(telephone.password):
+                        print("Dryyyyn, dryyyn\n"
+                            + "Telefon zaczął dzwonić w daleką czasoprzestrzeń\n"
+                            + "Po chwili z odpowietrznika maszyny wypadł klucz na ziemie")
+                        key = item("Key", "Klucz do kufra")
+                    else:
+                        print("Po przekręceniu koła nic się nie dzieje")
+                        continue
+                elif option == r"\get":
+                    if 'key' in dir():
+                        print("Zdobyłeś klucz!")
+                        player.add_backpack(key)
+                    else: 
+                        continue
+                elif option == r"\opis":
+                    telephone.opis()
+                    continue
+                else:
+                    print("Źle")
+                    continue
         elif choose == r"\kufer":
-            pass
+            kufer.opis()
+            option = choosing_menu()
+            if option == r"\use":
+                if player.check_item(key): #######################################################################################################################################
+                    print("Jest")
+                else:
+                    print("NIema")
         elif choose == r"\maszyna_czasu":
             pass
         elif choose == r"\ksiega":
@@ -204,7 +262,7 @@ def choosing_menu():
         elif choose_menu == r"\get":
             return r"\get"
         elif choose_menu == r"\ekwipunek":
-            pass #pokazuje ekwpipunek
+            player.show_backpack()
         elif choose_menu == r"\opis":
             return r"\opis"
         elif choose_menu == r"\pomoc":
@@ -238,6 +296,7 @@ telephone = Telephone("Mechanizm Kombinacji Czasowych")
 table = Table("Stół z zagadką", "Kolumb")
 board = Board("Tablica", 1453, 515675200)
 machine = Machine("Maszyna")
+kufer = Kufer("Kufer Czasu")
 
 player = Player()
 play_second_room()
