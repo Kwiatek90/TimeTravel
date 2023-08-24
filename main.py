@@ -43,11 +43,6 @@ class Furniture():
     def opis(self):
         print(self.description + f"{self.name}")
         
-
-        
-   
-        
-
 #klasa z pomieszczeniami
 class Board(Furniture):
     def __init__(self, name, year, telephon_number):
@@ -122,18 +117,64 @@ class Kufer(Furniture):
         
     def opis(self):
         print(f"Na stole stoi starożytne zamknięte na klucz pudło, które jest znane jako 'Kufer Czasu'\n")
+
+
+class TimeMachine(Furniture):
+    def __init__(self, name):
+        super().__init__(name)   
+        
+    def opis(self):
+        print(f"W rogu pokoju stoi tajemnicza maszyna czasu.\n"
+              + "Jej imponująca konstrukcja przykuwa wzrok i budzi ogromne zainteresowanie\n"
+              + "Wskazówki znajdujące się na maszynie sugerują, że aby aktywować maszynę\n"
+              + "musisz naprawić maszynę. WYmaga to identyfikacji odpowiednihc wzorców i sekwencji\n")
+        
+class Book(Furniture):
+    def __init__(self, name):
+        super().__init__(name)
+        self.solution = "Tutanchamon"      
+          
+    def opis(self):
+        print(f"Leży na stoliku, starannie oprawiona księga, która opisuje historie podróży w\n"
+              + "czasie oraz zawiera informacje o kluczowych wydarzeniach w różnych okresach\n"
+              + "Na pierwszej stronie księgi widzimy coś na podobę zagadki: \n"
+              + "W starożytnym Egipcie chowano mnie z najwyższą troską,\n"
+              + "W grobowcach pełnych skarbów, klejnotów i złota.\n"
+              + "Na tronie zasiadałem jako faraon potężny,\n"
+              + "Moje imię w historii zachowało się pięknie.\n")
+      
+class Scales(Furniture):
+    def __init__(self, name):
+        super().__init__(name)
+        self.helmet = 9.5
+        self.weights = 0
+        
+    def opis(self):
+        print("Na stole znajduje się mała waga oraz kilka drzwiczek. Na wadze znajduję się hełm,\n"
+              + ",którego nie możemy poruszyć, jakby był zaczarowany\n"
+              + "Po drugiej stronie wagi talerz jest pusty, lecz obok stoją odważniki 5kg, 2kg, 1kg i 0,5kg\n"
+              + "Ustaw odważniki w odpowiedni sposób!\n")
+    
+    def play(self, weight):
+        weights += weight
+        if self.weights ==  self.helmet:
+            print("Waga zrównała się!")
+        elif
+        ### dodac jak waga jest weiksza i mneijsza           
         
         
-        
-        
-        
-   
         
 #klasa z przedmiotami
 class item():
+    
     def __init__(self, name, desc):
         self.name = name
         self.desc = desc
+        self.active = 0
+        
+    classmethod
+    def actived(self):
+        self.active += 1
         
     
 
@@ -210,12 +251,12 @@ def play_second_room():
                         print("Dryyyyn, dryyyn\n"
                             + "Telefon zaczął dzwonić w daleką czasoprzestrzeń\n"
                             + "Po chwili z odpowietrznika maszyny wypadł klucz na ziemie")
-                        key = item("Key", "Klucz do kufra")
+                        key.actived()
                     else:
                         print("Po przekręceniu koła nic się nie dzieje")
                         continue
                 elif option == r"\get":
-                    if 'key' in dir():
+                    if key.active == 1:
                         print("Zdobyłeś klucz!")
                         player.add_backpack(key)
                     else: 
@@ -228,16 +269,83 @@ def play_second_room():
                     continue
         elif choose == r"\kufer":
             kufer.opis()
-            option = choosing_menu()
-            if option == r"\use":
-                if player.check_item(key): #######################################################################################################################################
-                    print("Jest")
+            while True:
+                option = choosing_menu()
+                if option == r"\use":
+                    if player.check_item(key): 
+                        print("Po użyciu klucza z twojego ekwipunku otwiera się szkatułka!\n"
+                            + "Patrząc do środka zauważyć można coś na podobę modułu,\n"
+                            + "który może zostać użyty do budowy czegoś")
+                        module.actived()
+                    else:
+                        print("Szkatułka jest zamknięta")
+                elif option == r"\get":
+                    if module.active == 1:
+                        print("Moduł został dodany do twojego ekwipunku!")
+                        player.add_backpack(module)
+                    else: 
+                        continue
+                elif option == r"\opis":
+                    kufer.opis()
+                    continue
                 else:
-                    print("NIema")
+                    print("Źle")
+                    continue
         elif choose == r"\maszyna_czasu":
-            pass
+            time_machine.opis()
+            while True:
+                option = choosing_menu()
+                if option == r"\use":
+                    if player.check_item(module):
+                        print("Umieszczasz w maszynie modul czasu. Maszyna zaczyna się trząść, wibrować\n"
+                              + "Nagle utworzył się portal w maszynie z któego wyskoczył niebieski\n "
+                              + "medalion zamykając portal za sobą\n")
+                        blue_medalion.actived() 
+                    else:
+                        print("Maszyna zaczyna pracować, lecz po chwili wydobywa się buczenie z silnika\n"
+                              + "i maszyna się wyłącza\n")
+                elif option == r"\get":
+                    if blue_medalion.active == 1:
+                        print("Niebieski medalion został dodany do Twojego ekwipunku!")
+                        player.add_backpack(blue_medalion)
+                    else:
+                        continue
+                elif option == r"\opis":
+                    time_machine.opis()
+                    continue
+                else:
+                    print("Nie ma takiej komendy")
+                    continue
         elif choose == r"\ksiega":
-            pass
+            book.opis()
+            while True:
+                option = choosing_menu()
+                if option == r"\use":
+                    print("Podaj rozwiązanie tej zagadki:\n")
+                    solution = input()
+                    if solution == book.solution:
+                        print("Po wpisaniu imienia w księge czasu nagle pojawia się z niej światło\n"
+                              + ",które otwiera nową stronę w księdze ukazującą ciąg liczb zapisanych na kartce\n"
+                              + "Kartke można zabrać do ekwipunku"
+                              + "Po chwili księga się zamyka na zatrzask i wypada z niej medalion!")
+                        paper.actived()
+                        green_medalion.actived()
+                    else:
+                        "Po wpisaniu rozwiązania nic się nie dzieje, spróbuj ponownie!\n"
+                        continue
+                elif option == r"\get":
+                    if green_medalion.active == 1 :
+                         print("Zielony medalion i kartka z cyframi został dodany do Twojego ekwipunku!")
+                         player.add_backpack(green_medalion)
+                         player.add_backpack(paper)
+                    else:
+                        continue
+                elif option == r"\opis":
+                    book.opis()
+                    continue
+                else:
+                    print("Nie ma takiej komendy")
+                    continue
         elif choose == r"\waga":
             pass
         elif choose == r"\szkatulka":
@@ -257,6 +365,7 @@ def choosing_menu():
         print("\nCo dalej?")
         print(r"\ekwipunek \pomoc \wyjdz")
         choose_menu = input()
+
         if choose_menu == r"\use":
             return r"\use"
         elif choose_menu == r"\get":
@@ -296,7 +405,18 @@ telephone = Telephone("Mechanizm Kombinacji Czasowych")
 table = Table("Stół z zagadką", "Kolumb")
 board = Board("Tablica", 1453, 515675200)
 machine = Machine("Maszyna")
-kufer = Kufer("Kufer Czasu")
 
+kufer = Kufer("Kufer Czasu")
+key = item("Key", "Klucz do kufra")
+module = item("Moduł czasu", "Potrzebny do naprawy maszyny czasu")
+
+time_machine = TimeMachine("Maszyna czasu")
+blue_medalion = item("Niebieski medalion", "Medalion służy do otwarcia portalu")
+
+book = Book("Księga Czasu")
+paper = item("56783958", "Kartka papier z ciągiem liczb")
+green_medalion = item("Zielony medalion", "Medalion służy do otwarcia portalu")
+
+scales = 
 player = Player()
 play_second_room()
