@@ -148,6 +148,7 @@ class Scales(Furniture):
         super().__init__(name)
         self.helmet = 9.5
         self.weights = 0
+        self.doors = "closed"
         
     def opis(self):
         print("Na stole znajduje się mała waga oraz kilka drzwiczek. Na wadze znajduję się hełm,\n"
@@ -155,12 +156,24 @@ class Scales(Furniture):
               + "Po drugiej stronie wagi talerz jest pusty, lecz obok stoją odważniki 5kg, 2kg, 1kg i 0,5kg\n"
               + "Ustaw odważniki w odpowiedni sposób!\n")
     
-    def play(self, weight):
-        weights += weight
+    def check(self):   
         if self.weights ==  self.helmet:
-            print("Waga zrównała się!")
-        elif
-        ### dodac jak waga jest weiksza i mneijsza           
+            print("Waga zrównała się!\n")
+            print("Gdy waga się zrównała otworzyły się drzwiczki pod stołem, ukazały się cztery figurki i medalion!\n")
+            yellow_medalion.actived()
+            kleopatra.actived()
+            szekspir.actived()
+            bonaparte.actived()
+            mandela.actived()
+            scales.open_doors()
+        elif self.weights <= self.helmet:
+            print("Ciężarki są niżej niż hełm")
+        elif self.weights >= self.helmet:   
+            print("Ciężarki są wyżek niż hełm")     
+            
+    def open_doors(self):
+        self.doors = "open"
+        
         
         
         
@@ -176,12 +189,7 @@ class item():
     def actived(self):
         self.active += 1
         
-    
-
-
-
 #main
-
 
 def help_command():
     print("\nDostępne komendy:\n" 
@@ -191,11 +199,58 @@ def help_command():
           + r"\pomoc - wyświetli listę dostępnych instrukcji " 
           + r"\opisz - opisuje aktualne miejsce" 
     )
+  
     
-def furniture_activites(furniture):
-    furniture.opis()
-    choosing_menu()
-    
+def play_scales():
+    while True:
+        option = choosing_menu()
+        if option == r"\use":
+            while True:
+                if scales.doors == "closed":
+                    weight = float(input("Podaj jaki ciężar chcesz postawić/zdjąć z wagi?\n"))
+                    if weight == 5 or weight == 2 or weight == 1 or weight == 0.5:
+                        pass
+                    elif weight == "\wyjdz":
+                        play_second_room()
+                    else:
+                        print("Żle podana waga!")
+                        continue
+                    
+                    akcja = str(input("Chcesz zdjąć czy postawić ciężar? ( dodaj/zdejmij )\n"))
+                    if akcja == "dodaj":
+                        scales.weights += weight
+                    elif akcja == "zdejmij":
+                        scales.weights -= weight
+                    elif akcja == "\wyjdz":
+                        play_second_room()
+                    else:
+                        print("Błąd słowa")
+                        continue
+                    
+                    scales.check()
+                else:
+                    print("Waga jest zrówna i drzwiczki są otwarte!")
+                    play_scales()
+        elif option == r"\get":
+            if scales.doors == "open":
+                player.add_backpack(yellow_medalion)
+                player.add_backpack(bonaparte)
+                player.add_backpack(mandela)
+                player.add_backpack(szekspir)
+                player.add_backpack(kleopatra)
+                print("Do twojego ekipunku zostaly dodane figurki oraz żółty medalion!")
+                continue
+        elif option == r"\opis":
+            scales.opis()
+        else:   
+            print("Nie ma takiej komendy")
+            continue
+            
+                
+        
+            
+          
+                
 def play_first_room():
     while True:
         print(r"Wybierz gdzie chcesz podejśc: \tablica, \stol, \maszyna, \wlaz")
@@ -347,9 +402,10 @@ def play_second_room():
                     print("Nie ma takiej komendy")
                     continue
         elif choose == r"\waga":
-            pass
+            scales.opis()
+            play_scales()
         elif choose == r"\szkatulka":
-            pass
+            pass #### teraz szkatułka i test wagi!!!!
         elif choose == r"\wlaz":
             Player.go_room_first()
             print("Przechodzisz do Tajemniczego pokoju\n")
@@ -417,6 +473,13 @@ book = Book("Księga Czasu")
 paper = item("56783958", "Kartka papier z ciągiem liczb")
 green_medalion = item("Zielony medalion", "Medalion służy do otwarcia portalu")
 
-scales = 
+scales = Scales("Waga")
+yellow_medalion = item("Żółty medalion", "Medalion służy do otwarcia portalu")
+
+kleopatra = item("Kleopatra", "Figurka kleopatry")
+szekspir = item("Szekspir", 'Figurka Szekspira')
+bonaparte =  item("Bonaparte", "Figurka Bonaparte")
+mandela =  item("Mandela", "Figurka Mandeli")
+
 player = Player()
 play_second_room()
