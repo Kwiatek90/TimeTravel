@@ -1,3 +1,8 @@
+import sys
+
+def str_to_class(str):
+    return getattr(sys.modules[__name__], str)
+
 class Player():
     level = 0 
     active_room = 1
@@ -180,6 +185,7 @@ class Casket(Furniture):
         self.casket_close_open = "closed"
         self.solution = "Rzym"
         self.content_of_the_casket = []
+        self.solution_characters = [kleopatra, szekspir, bonaparte, mandela]
         
     def opis(self):
         print(f"Ukryta na półce jest mała, zamknięta szkatułka, która zawiera na sobie\n"
@@ -189,6 +195,17 @@ class Casket(Furniture):
     def open_casket(self):
         self.casket_close_open = "open"
         
+    def check_characters(self):
+        if self.content_of_the_casket == self.solution_characters:
+            black_medalion.actived()
+        else:
+            self.solution_characters = []
+            player.add_backpack(bonaparte)
+            player.add_backpack(mandela)
+            player.add_backpack(szekspir)
+            player.add_backpack(kleopatra)
+            print("Figury zostały żle ułożone!!!")
+
 #klasa z przedmiotami
 class item():
     
@@ -276,12 +293,29 @@ def play_casket():
                     casket.open_casket()
             else:
                 print("Widzimy otwartą szkatułkę\n"
-                      + "Spróbuj ułożyc figurki chronologicznie\n")    # zmienic tekst
-                first = input("Ułóż pierwszą figurkę: \n")
-                casket.content_of_the_casket.append(first) #pomysl jak dodawa figurki zgodnie z klasami i obiektami
+                      + "Spróbuj ułożyc figurki chronologicznie\n")  
+                while True: 
+                    character = input("Wpisz nazwę figurki: \n")
+                    try:         
+                        character = str_to_class(character)
+                    except:
+                        print("Nie masz takiej figurki!")
+                        continue
+                    if len(casket.content_of_the_casket) <= 3:
+                        character_add_casket(character)
+                        continue
+                    else:
+                        casket.check_characters()
+                        play_casket()
+        elif option == r"\get":
+            pass##dodac geta medalion i odblokowanie maszyny czasu # testowac
                 
-                 
-                
+def character_add_casket(character):        
+    if character in player.backpack:
+        casket.content_of_the_casket.append(character)
+        player.backpack.pop(character)
+    else:
+        print("Figurka znajduję się już w szkatułce")
                 
         
             
@@ -519,6 +553,7 @@ bonaparte =  item("Bonaparte", "Figurka Bonaparte")
 mandela =  item("Mandela", "Figurka Mandeli")
 
 casket = Casket("Magiczna szkatułka")
+black_medalion = item("Czarny medalion", "Medalion służy do otwarcia portalu")
 
 player = Player()
 play_second_room()
