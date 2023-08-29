@@ -174,8 +174,20 @@ class Scales(Furniture):
     def open_doors(self):
         self.doors = "open"
         
+class Casket(Furniture):
+    def __init__(self, name):
+        super().__init__(name)
+        self.casket_close_open = "closed"
+        self.solution = "Rzym"
+        self.content_of_the_casket = []
         
+    def opis(self):
+        print(f"Ukryta na półce jest mała, zamknięta szkatułka, która zawiera na sobie\n"
+              + "alfabet, a pod nim ciąg znaków. Na szkatułce jest narysowana podobnizna śpiewającego Juliusza Cezara.\n"
+              + "Być może jest to jakiegos rodzaju szyfr?\n")
         
+    def open_casket(self):
+        self.casket_close_open = "open"
         
 #klasa z przedmiotami
 class item():
@@ -232,7 +244,7 @@ def play_scales():
                     print("Waga jest zrówna i drzwiczki są otwarte!")
                     play_scales()
         elif option == r"\get":
-            if scales.doors == "open":
+            if scales.doors == "open" and yellow_medalion not in player.backpack:  #dodac to do pozostałych
                 player.add_backpack(yellow_medalion)
                 player.add_backpack(bonaparte)
                 player.add_backpack(mandela)
@@ -240,12 +252,36 @@ def play_scales():
                 player.add_backpack(kleopatra)
                 print("Do twojego ekipunku zostaly dodane figurki oraz żółty medalion!")
                 continue
+            else:
+                continue
         elif option == r"\opis":
             scales.opis()
         else:   
             print("Nie ma takiej komendy")
             continue
             
+def play_casket():
+    while True:
+        option = choosing_menu()
+        if option == r"\use":
+            if casket.casket_open_close == "close":
+                print("Szyfr znajdujący się na szkatułce to:\n "
+                      + "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ\n"
+                      + "Wbąp")
+                solution = input("Powiedz jakie jest rozwiązanie tego szyfru: \n")
+                if solution == casket.solution:
+                    print("Po złamaniu szyfru szaktułka magicznie się otwiera\n"
+                          + "Patrząc do środka widzimi 4 miejsca na figurki.\n" 
+                          + "Na lewej stronie szkatułki napisane jest: 'Najstarsza z postaci'")
+                    casket.open_casket()
+            else:
+                print("Widzimy otwartą szkatułkę\n"
+                      + "Spróbuj ułożyc figurki chronologicznie\n")    # zmienic tekst
+                first = input("Ułóż pierwszą figurkę: \n")
+                casket.content_of_the_casket.append(first) #pomysl jak dodawa figurki zgodnie z klasami i obiektami
+                
+                 
+                
                 
         
             
@@ -405,7 +441,8 @@ def play_second_room():
             scales.opis()
             play_scales()
         elif choose == r"\szkatulka":
-            pass #### teraz szkatułka i test wagi!!!!
+            casket.opis()
+            play_casket()
         elif choose == r"\wlaz":
             Player.go_room_first()
             print("Przechodzisz do Tajemniczego pokoju\n")
@@ -470,7 +507,7 @@ time_machine = TimeMachine("Maszyna czasu")
 blue_medalion = item("Niebieski medalion", "Medalion służy do otwarcia portalu")
 
 book = Book("Księga Czasu")
-paper = item("56783958", "Kartka papier z ciągiem liczb")
+paper = item("5", "Kartka papier z liczbą")
 green_medalion = item("Zielony medalion", "Medalion służy do otwarcia portalu")
 
 scales = Scales("Waga")
@@ -480,6 +517,8 @@ kleopatra = item("Kleopatra", "Figurka kleopatry")
 szekspir = item("Szekspir", 'Figurka Szekspira')
 bonaparte =  item("Bonaparte", "Figurka Bonaparte")
 mandela =  item("Mandela", "Figurka Mandeli")
+
+casket = Casket("Magiczna szkatułka")
 
 player = Player()
 play_second_room()
