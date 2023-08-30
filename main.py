@@ -83,7 +83,8 @@ class Machine(Furniture):
     #tablica do wrzucania monet
     def __init__(self, name):
         super().__init__(name)
-        
+        self.active = 0 
+        self.content_of_the_machine = []  
     def opis(self):
         print(f"\nMaszyna jest największym elementem pomieszczenia. Jej konstrukcja przypomina\n"
             + "kombinację zegara, urządzenia muzycznego i maszyny do gry. Skomplikowane rury i\n"
@@ -95,6 +96,10 @@ class Machine(Furniture):
               + "Musisz odnależć medaliony, by dostosować maszynę w odpowiedni sposób i\n"
               + "aktywować magiczne pole energii, które umożliwi Ci podróż w czasie!\n"
               + "Aby to osiągnąć, musisz zidentyfikować właściwe wzorce i sekwencje, które reprezentują różne okresy czasu.\n")
+        
+    classmethod
+    def actived(self):
+        self.active += 1
          
 class Telephone(Furniture):
     password = ""
@@ -126,13 +131,16 @@ class Kufer(Furniture):
 
 class TimeMachine(Furniture):
     def __init__(self, name):
-        super().__init__(name)   
+        super().__init__(name)
+        
         
     def opis(self):
         print(f"W rogu pokoju stoi tajemnicza maszyna czasu.\n"
               + "Jej imponująca konstrukcja przykuwa wzrok i budzi ogromne zainteresowanie\n"
               + "Wskazówki znajdujące się na maszynie sugerują, że aby aktywować maszynę\n"
               + "musisz naprawić maszynę. WYmaga to identyfikacji odpowiednihc wzorców i sekwencji\n")
+        
+   
         
 class Book(Furniture):
     def __init__(self, name):
@@ -308,7 +316,12 @@ def play_casket():
                         casket.check_characters()
                         play_casket()
         elif option == r"\get":
-            pass##dodac geta medalion i odblokowanie maszyny czasu # testowac
+            if black_medalion.active == 1:
+                player.add_backpack(black_medalion)
+                machine.actived()
+            else:
+                print("Nic się nie dzieje")
+                continue
                 
 def character_add_casket(character):        
     if character in player.backpack:
@@ -343,10 +356,26 @@ def play_first_room():
                     pass
         elif choose == r"\maszyna":
             machine.opis()
-            option = choosing_menu()
-            if option == r"\get":
-                machine.get()
-                choosing_menu() #to jest żle
+            while True:
+                option = choosing_menu()
+                if option == r"\use":
+                    throw = input("Wrzuć medaliony do maszyny: ")
+                    if throw == "black"  # wpisac medaliony do testu
+                    try:         
+                        throw = str_to_class(throw)
+                    except:
+                        print("Nie masz takiego medalionu!")
+                        continue
+                    if len(machine.content_of_the_machine) <= 3:
+                        machine.content_of_the_machine.append(throw)
+                        player.backpack.pop(throw)
+                        print("Medalion został dodany do twojej maszyny")
+                        continue
+                    else:
+                        pass #wygrana!!!
+                if option == r"\get":
+                    machine.get()
+                    choosing_menu() #to jest żle
         elif choose == r"\wlaz":
             if Player.level == 0:
                 print("Właz jest zamknięty")
