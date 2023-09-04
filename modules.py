@@ -42,7 +42,7 @@ def play_second_room():
             file_reader("scales_des.txt")
             play_scales()
         elif choose == r"\szkatulka":
-            file_reader("book_des.txt")
+            file_reader("casket_des.txt")
             play_casket()
         elif choose == r"\wlaz":
             player.go_room_first()
@@ -146,14 +146,12 @@ def play_telephone():
             print("Wykręć numer telefonu na kole: \n")
             solution = input()
             if solution == str(telephone.password):
-                print("Dryyyyn, dryyyn\n"
-                    + "Telefon zaczął dzwonić w daleką czasoprzestrzeń\n"
-                    + "Po chwili z odpowietrznika maszyny wypadł klucz na ziemie")
+                file_reader("telephone_solution.txt")
                 key.actived()
             else:
                 print("Po przekręceniu koła nic się nie dzieje")
                 continue
-        elif option == r"\get":
+        elif option == r"\get" and key not in player.backpack:
             if key.active == 1:
                 print("Zdobyłeś klucz!")
                 player.add_backpack(key)
@@ -170,15 +168,13 @@ def play_kufer():
     while True:
         option = choosing_menu()
         if option == r"\use":
-            if player.check_item(key): # mozna zebrac dwa razy modul 
-                print("Po użyciu klucza z twojego ekwipunku otwiera się szkatułka!\n"
-                    + "Patrząc do środka zauważyć można coś na podobę modułu,\n"
-                    + "który może zostać użyty do budowy czegoś")
+            if player.check_item(key):
+                file_reader("kufer_solution.txt")
                 module.actived()
             else:
                 print("Szkatułka jest zamknięta")
         elif option == r"\get":
-            if module.active == 1 and module not in player.backpack: #przetestować
+            if module.active == 1 and module not in player.backpack: 
                 print("Moduł został dodany do twojego ekwipunku!")
                 player.add_backpack(module)
             else: 
@@ -195,14 +191,11 @@ def play_time_machine():
                 option = choosing_menu()
                 if option == r"\use":
                     if player.check_item(module):
-                        print("Umieszczasz w maszynie modul czasu. Maszyna zaczyna się trząść, wibrować\n"
-                              + "Nagle utworzył się portal w maszynie z któego wyskoczył niebieski\n "
-                              + "medalion zamykając portal za sobą\n")
+                        file_reader("time_machine_solution.txt")
                         blue_medalion.actived() 
                     else:
-                        print("Maszyna zaczyna pracować, lecz po chwili wydobywa się buczenie z silnika\n"
-                              + "i maszyna się wyłącza\n")
-                elif option == r"\get":
+                        file_reader("time_machine_break.txt")
+                elif option == r"\get" and blue_medalion not in player.backpack:
                     if blue_medalion.active == 1:
                         print("Niebieski medalion został dodany do Twojego ekwipunku!")
                         player.add_backpack(blue_medalion)
@@ -222,17 +215,14 @@ def play_book():
             print("Podaj rozwiązanie tej zagadki:\n")
             solution = input()
             if solution == book.solution:
-                print("Po wpisaniu imienia w księge czasu nagle pojawia się z niej światło\n"
-                        + ",które otwiera nową stronę w księdze ukazującą ciąg liczb zapisanych na kartce\n"
-                        + "Kartke można zabrać do ekwipunku"
-                        + "Po chwili księga się zamyka na zatrzask i wypada z niej medalion!")
+                file_reader("book_solution.txt")
                 paper.actived()
                 green_medalion.actived()
             else:
-                "Po wpisaniu rozwiązania nic się nie dzieje, spróbuj ponownie!\n"
+                print("Po wpisaniu rozwiązania nic się nie dzieje, spróbuj ponownie!\n")
                 continue
         elif option == r"\get":
-            if green_medalion.active == 1 :
+            if green_medalion.active == 1 and green_medalion not in player.backpack:
                     print("Zielony medalion i kartka z cyframi został dodany do Twojego ekwipunku!")
                     player.add_backpack(green_medalion)
                     player.add_backpack(paper)
@@ -259,7 +249,6 @@ def play_scales():
                     else:
                         print("Żle podana waga!")
                         continue
-                    
                     akcja = str(input("Chcesz zdjąć czy postawić ciężar? ( dodaj/zdejmij )\n"))
                     if akcja == "dodaj":
                         scales.weights += weight
@@ -276,7 +265,7 @@ def play_scales():
                     print("Waga jest zrówna i drzwiczki są otwarte!")
                     play_scales()
         elif option == r"\get":
-            if scales.doors == "open" and yellow_medalion not in player.backpack:  #dodac to do pozostałych
+            if scales.doors == "open" and yellow_medalion not in player.backpack:  
                 player.add_backpack(yellow_medalion)
                 player.add_backpack(bonaparte)
                 player.add_backpack(mandela)
@@ -296,33 +285,28 @@ def play_casket():
     while True:
         option = choosing_menu()
         if option == r"\use":
-            if casket.casket_open_close == "close":
-                print("Szyfr znajdujący się na szkatułce to:\n "
-                      + "AĄBCĆDEĘFGHIJKLŁMNŃOÓPRSŚTUWYZŹŻ\n"
-                      + "Wbąp")
+            if casket.casket_close_open  == "closed":
+                file_reader("casket_solution_open.txt")
                 solution = input("Powiedz jakie jest rozwiązanie tego szyfru: \n")
                 if solution == casket.solution:
-                    print("Po złamaniu szyfru szaktułka magicznie się otwiera\n"
-                          + "Patrząc do środka widzimi 4 miejsca na figurki.\n" 
-                          + "Na lewej stronie szkatułki napisane jest: 'Najstarsza z postaci'")
+                    file_reader("casket_solution.txt")
                     casket.open_casket()
             else:
                 print("Widzimy otwartą szkatułkę\n"
                       + "Spróbuj ułożyc figurki chronologicznie\n")  
                 while True: 
-                    character = input("Wpisz nazwę figurki: \n")
-                    try:         
-                        character = str_to_class(character)
-                    except:
-                        print("Nie masz takiej figurki!")
-                        continue
-                    if len(casket.content_of_the_casket) <= 3:
-                        character_add_casket(character)
-                        continue
+                    character = input("Wpisz nazwę figurki: \n")       
+                    character = str_to_class(character)
+                    if character in player.backpack:############### sprawdzi to !!!!!!!!!!!
+                        if len(casket.content_of_the_casket) <= 3:
+                            character_add_casket(character)
+                            continue
+                        else:
+                            casket.check_characters()
+                            play_casket()
                     else:
-                        casket.check_characters()
-                        play_casket()
-        elif option == r"\get":
+                        print("Podałeś złą nazwe figurki!")
+        elif option == r"\get" and black_medalion not in player.backpack:
             if black_medalion.active == 1:
                 player.add_backpack(black_medalion)
                 machine.actived()

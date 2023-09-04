@@ -3,7 +3,7 @@ class Player():
     active_room = 0
     
     def __init__(self):
-        self.backpack = [yellow_medalion]
+        self.backpack = []
     
     @classmethod
     def add_level(cls):
@@ -34,16 +34,10 @@ class Player():
     
 
 #klasa z pomieszczeniami ogólna
-
 class Furniture():
-    description = "Znajdujesz się przy"
-    
     def __init__(self, name):
         self.name = name
-        
-    def opis(self):
-        print(self.description + f"{self.name}")
-        
+               
 #klasa z pomieszczeniami
 class Board(Furniture):
     def __init__(self, name, year, telephon_number):
@@ -87,17 +81,7 @@ class Telephone(Furniture):
         
     @classmethod   
     def active_key(cls):
-        cls.key += 1
-        
-class Kufer(Furniture):
-    def __init__(self, name):
-        super().__init__(name)
-
-
-class TimeMachine(Furniture):
-    def __init__(self, name):
-        super().__init__(name)       
-   
+        cls.key += 1     
         
 class Book(Furniture):
     def __init__(self, name):
@@ -157,7 +141,6 @@ class Casket(Furniture):
 
 #klasa z przedmiotami
 class item():
-    
     def __init__(self, name, desc):
         self.name = name
         self.desc = desc
@@ -174,11 +157,9 @@ table = Table("Stół z zagadką", "Kolumb")
 board = Board("Tablica", 1453, 515675200)
 machine = Machine("Maszyna")
 
-kufer = Kufer("Kufer Czasu")
 key = item("Key", "Klucz do kufra")
 module = item("Moduł czasu", "Potrzebny do naprawy maszyny czasu")
 
-time_machine = TimeMachine("Maszyna czasu")
 blue_medalion = item("Niebieski medalion", "Medalion służy do otwarcia portalu")
 
 book = Book("Księga Czasu")

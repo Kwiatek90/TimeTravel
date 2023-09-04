@@ -1,0 +1,2 @@
+Maszyna zaczyna pracować, lecz po chwili wydobywa się buczenie z silnika
+i maszyna się wyłącza

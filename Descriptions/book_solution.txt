@@ -1,0 +1,4 @@
+Po wpisaniu imienia w księgę czasu nagle pojawia się z niej światło,
+które otwiera nową stronę w księdze ukazującą ciąg liczb zapisanych na kartce.
+Kartkę można zabrać do ekwipunku.
+Po chwili księga się zamyka na zatrzask i wypada z niej medalion!
