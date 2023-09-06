@@ -3,7 +3,7 @@ class Player():
     active_room = 0
     
     def __init__(self):
-        self.backpack = []
+        self.backpack = [blue_medalion, yellow_medalion, green_medalion, black_medalion]
     
     @classmethod
     def add_level(cls):
@@ -16,7 +16,6 @@ class Player():
     @classmethod
     def go_room_second(cls):
         cls.active_room += 1
-        print("dodaje")
          
     def show_backpack(self):
         print(f"Twoje przedmioty w ekwipunku:")
@@ -33,15 +32,17 @@ class Player():
             return False
     
 
-#klasa z pomieszczeniami ogólna
+#klasa z casket book table
+
 class Furniture():
-    def __init__(self, name):
+    def __init__(self, name, solution):
         self.name = name
+        self.solution = solution
                
 #klasa z pomieszczeniami
 class Board(Furniture):
     def __init__(self, name, year, telephon_number):
-        super().__init__(name)
+        self.name = name
         self.year = year
         self.telephone_number = telephon_number
         Telephone.telephone_solution(telephon_number)
@@ -52,17 +53,11 @@ class Board(Furniture):
               + f"Znajdują się na niej liczby. Przypatrując się bardziej\n"
               + f"widzisz ciąg liczb {self.year}|{self.telephone_number}")
 
-    
-class Table(Furniture):
-    def __init__(self, name, solution):
-        super().__init__(name)
-        self.solution = solution
-              
-      
-class Machine(Furniture):
+        
+class Machine():
     #tablica do wrzucania monet
     def __init__(self, name):
-        super().__init__(name)
+        self.name = name
         self.active = 0 
         self.content_of_the_machine = []  
         
@@ -70,11 +65,11 @@ class Machine(Furniture):
     def actived(self):
         self.active += 1
          
-class Telephone(Furniture):
+class Telephone():
     password = ""
     key = 0
     def __init__(self, name):
-        super().__init__(name)
+        self.name = name
         
     def telephone_solution(solution):
         Telephone.password = solution
@@ -84,17 +79,16 @@ class Telephone(Furniture):
         cls.key += 1     
         
 class Book(Furniture):
-    def __init__(self, name):
-        super().__init__(name)
-        self.solution = "Tutanchamon"      
+    def __init__(self, name, solution):
+        super().__init__(name, solution)    
           
     def opis(self):
         from modules import file_reader as fr
         fr("book_des.txt")
       
-class Scales(Furniture):
+class Scales():
     def __init__(self, name):
-        super().__init__(name)
+        self.name = name
         self.helmet = 9.5
         self.weights = 0
         self.doors = "closed"
@@ -118,10 +112,9 @@ class Scales(Furniture):
         self.doors = "open"
         
 class Casket(Furniture):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, solution):
+        super().__init__(name, solution)
         self.casket_close_open = "closed"
-        self.solution = "Rzym"
         self.content_of_the_casket = []
         self.solution_characters = [kleopatra, szekspir, bonaparte, mandela]
         
@@ -131,8 +124,9 @@ class Casket(Furniture):
     def check_characters(self):
         if self.content_of_the_casket == self.solution_characters:
             black_medalion.actived()
+            print("Po ułożeniu figurek nagle magicznie z drzwiczek szkatulki wypada czarny medalion!\n")
         else:
-            self.solution_characters = []
+            self.content_of_the_casket = []
             player.add_backpack(bonaparte)
             player.add_backpack(mandela)
             player.add_backpack(szekspir)
@@ -153,29 +147,22 @@ class item():
    
     
 telephone = Telephone("Mechanizm Kombinacji Czasowych")
-table = Table("Stół z zagadką", "Kolumb")
+table = Furniture("Stół z zagadką", "Kolumb")
 board = Board("Tablica", 1453, 515675200)
 machine = Machine("Maszyna")
-
 key = item("Key", "Klucz do kufra")
 module = item("Moduł czasu", "Potrzebny do naprawy maszyny czasu")
-
 blue_medalion = item("Niebieski medalion", "Medalion służy do otwarcia portalu")
-
-book = Book("Księga Czasu")
+book = Book("Księga Czasu", "Tutanchamon")
 paper = item("5", "Kartka papier z liczbą")
 green_medalion = item("Zielony medalion", "Medalion służy do otwarcia portalu")
-
 scales = Scales("Waga")
 yellow_medalion = item("Żółty medalion", "Medalion służy do otwarcia portalu")
-
-kleopatra = item("Kleopatra", "Figurka kleopatry")
-szekspir = item("Szekspir", 'Figurka Szekspira')
-bonaparte =  item("Bonaparte", "Figurka Bonaparte")
-mandela =  item("Mandela", "Figurka Mandeli")
-
-casket = Casket("Magiczna szkatułka")
+kleopatra = item("kleopatra", "Figurka kleopatry")
+szekspir = item("szekspir", 'Figurka Szekspira')
+bonaparte =  item("bonaparte", "Figurka Bonaparte")
+mandela =  item("mandela", "Figurka Mandeli")
+casket = Casket("Magiczna szkatułka", "Rzym")
 black_medalion = item("Czarny medalion", "Medalion służy do otwarcia portalu")
-
 player = Player()
 

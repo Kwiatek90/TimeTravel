@@ -106,7 +106,8 @@ def play_table():
                 player.add_level()
                 continue
             else:
-                print("Błedna odpowiedz")######################dodac opcje kiedy hasło zostało odgadnięte
+                print("Błedna odpowiedz")
+                continue
                 
 def play_machine():
     while True:
@@ -116,15 +117,16 @@ def play_machine():
             if throw == "Czarny medalion" or  throw == "Zielony medalion" or  throw == "Żółty medalion" or  throw == "Niebieski medalion":    
                 for item in player.backpack:
                     if throw == item.name:  
-                        if len(machine.content_of_the_machine) <= 3:
-                            machine.content_of_the_machine.append(item)
-                            player.backpack.remove(item)
-                            print("Medalion został dodany do twojej maszyny")
-                            continue
+                        machine.content_of_the_machine.append(item)
+                        player.backpack.remove(item)
+                        print("Medalion został dodany do twojej maszyny")
+                        if len(machine.content_of_the_machine) == 4:
+                            file_reader("end_game.txt")
+                            quit()
                         else:
-                            print("Wygrałeś")
+                            continue
             else:
-                print("Źle wpisany przedmiot!")
+                print("Nie masz takiego medalionu!")
                 continue
         if option == r"\get":
             file_reader("machine_des2.txt")
@@ -143,13 +145,17 @@ def play_telephone():
     while True:
         option = choosing_menu()
         if option == r"\use":
-            print("Wykręć numer telefonu na kole: \n")
-            solution = input()
-            if solution == str(telephone.password):
-                file_reader("telephone_solution.txt")
-                key.actived()
+            if key.active == 0:
+                print("Wykręć numer telefonu na kole: \n")
+                solution = input()
+                if solution == str(telephone.password):
+                    file_reader("telephone_solution.txt")
+                    key.actived()
+                else:
+                    print("Po przekręceniu koła nic się nie dzieje")
+                    continue
             else:
-                print("Po przekręceniu koła nic się nie dzieje")
+                print("Już dzwoniłeś telefonem !")
                 continue
         elif option == r"\get" and key not in player.backpack:
             if key.active == 1:
@@ -168,11 +174,16 @@ def play_kufer():
     while True:
         option = choosing_menu()
         if option == r"\use":
-            if player.check_item(key):
-                file_reader("kufer_solution.txt")
-                module.actived()
+            if module.active == 0:
+                if player.check_item(key):
+                    file_reader("kufer_solution.txt")
+                    player.backpack.remove(key)
+                    module.actived()
+                else:
+                    print("Szkatułka jest zamknięta")
             else:
-                print("Szkatułka jest zamknięta")
+                print("Już otworzyłeś szkatułke!")
+                continue
         elif option == r"\get":
             if module.active == 1 and module not in player.backpack: 
                 print("Moduł został dodany do twojego ekwipunku!")
@@ -190,11 +201,15 @@ def play_time_machine():
     while True:
                 option = choosing_menu()
                 if option == r"\use":
-                    if player.check_item(module):
-                        file_reader("time_machine_solution.txt")
-                        blue_medalion.actived() 
+                    if black_medalion.active == 0:
+                        if player.check_item(module):
+                            file_reader("time_machine_solution.txt")
+                            player.backpack.remove(module)
+                            blue_medalion.actived() 
+                        else:
+                            file_reader("time_machine_break.txt")
                     else:
-                        file_reader("time_machine_break.txt")
+                        print("Machina jest już uruchomiona!")   
                 elif option == r"\get" and blue_medalion not in player.backpack:
                     if blue_medalion.active == 1:
                         print("Niebieski medalion został dodany do Twojego ekwipunku!")
@@ -212,15 +227,18 @@ def play_book():
     while True:
         option = choosing_menu()
         if option == r"\use":
-            print("Podaj rozwiązanie tej zagadki:\n")
-            solution = input()
-            if solution == book.solution:
-                file_reader("book_solution.txt")
-                paper.actived()
-                green_medalion.actived()
+            if paper.active == 0:
+                print("Podaj rozwiązanie tej zagadki:\n")
+                solution = input()
+                if solution == book.solution:
+                    file_reader("book_solution.txt")
+                    paper.actived()
+                    green_medalion.actived()
+                else:
+                    print("Po wpisaniu rozwiązania nic się nie dzieje, spróbuj ponownie!\n")
+                    continue
             else:
-                print("Po wpisaniu rozwiązania nic się nie dzieje, spróbuj ponownie!\n")
-                continue
+                print("Już rozwiązałeś tą zagadke!")
         elif option == r"\get":
             if green_medalion.active == 1 and green_medalion not in player.backpack:
                     print("Zielony medalion i kartka z cyframi został dodany do Twojego ekwipunku!")
@@ -240,7 +258,7 @@ def play_scales():
         option = choosing_menu()
         if option == r"\use":
             while True:
-                if scales.doors == "closed":
+                if scales.doors == "closed": #zmienic na active
                     weight = float(input("Podaj jaki ciężar chcesz postawić/zdjąć z wagi?\n"))
                     if weight == 5 or weight == 2 or weight == 1 or weight == 0.5:
                         pass
@@ -285,7 +303,7 @@ def play_casket():
     while True:
         option = choosing_menu()
         if option == r"\use":
-            if casket.casket_close_open  == "closed":
+            if casket.casket_close_open  == "closed":  ## zmienic na active
                 file_reader("casket_solution_open.txt")
                 solution = input("Powiedz jakie jest rozwiązanie tego szyfru: \n")
                 if solution == casket.solution:
@@ -295,21 +313,22 @@ def play_casket():
                 print("Widzimy otwartą szkatułkę\n"
                       + "Spróbuj ułożyc figurki chronologicznie\n")  
                 while True: 
-                    character = input("Wpisz nazwę figurki: \n")       
-                    character = str_to_class(character)
-                    if character in player.backpack:############### sprawdzi to !!!!!!!!!!!
-                        if len(casket.content_of_the_casket) <= 3:
-                            character_add_casket(character)
-                            continue
-                        else:
+                    character = input("Wpisz nazwę figurki: \n")    
+                    if character == "kleopatra" or character == "szekspir" or character == "bonaparte" or character == "mandela": 
+                        character = str_to_class(character)
+                        character_add_casket(character)
+                        if len(casket.content_of_the_casket) == 4:
                             casket.check_characters()
                             play_casket()
+                        else:
+                            continue
                     else:
                         print("Podałeś złą nazwe figurki!")
         elif option == r"\get" and black_medalion not in player.backpack:
             if black_medalion.active == 1:
                 player.add_backpack(black_medalion)
                 machine.actived()
+                print("Czarny medalion został dodany do twojego ekwipunku!")
             else:
                 print("Nic się nie dzieje")
                 continue
@@ -320,6 +339,6 @@ def play_casket():
 def character_add_casket(character):        
     if character in player.backpack:
         casket.content_of_the_casket.append(character)
-        player.backpack.pop(character)
+        player.backpack.remove(character)
     else:
         print("Figurka znajduję się już w szkatułce")
