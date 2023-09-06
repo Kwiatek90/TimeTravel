@@ -3,7 +3,7 @@ class Player():
     active_room = 0
     
     def __init__(self):
-        self.backpack = [blue_medalion, yellow_medalion, green_medalion, black_medalion]
+        self.backpack = []
     
     @classmethod
     def add_level(cls):

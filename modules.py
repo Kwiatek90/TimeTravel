@@ -201,7 +201,7 @@ def play_time_machine():
     while True:
                 option = choosing_menu()
                 if option == r"\use":
-                    if black_medalion.active == 0:
+                    if blue_medalion.active == 0:
                         if player.check_item(module):
                             file_reader("time_machine_solution.txt")
                             player.backpack.remove(module)

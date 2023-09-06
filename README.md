@@ -19,6 +19,8 @@ You only need the appropriate version of python and its libraries,  running in y
 
 ## Video
 
+https://www.youtube.com/watch?v=mHO0ZggEkx8
+
 ## Applied technologies and libraries
 
 * Environment
