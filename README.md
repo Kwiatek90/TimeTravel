@@ -27,6 +27,7 @@ You only need the appropriate version of python and its libraries,  running in y
 
 * Libraries
     * os
+    * pathlib
 
 ## License
 
